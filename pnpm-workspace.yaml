@@ -1,0 +1,9 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# pnpmはデフォルトで依存パッケージのビルドスクリプトをブロックするため、
+# 実行を許可するパッケージをここで明示する
+allowBuilds:
+  sharp: true
+  unrs-resolver: true
