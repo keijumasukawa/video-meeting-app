@@ -1,0 +1,42 @@
+# --- 一時除外 ---
+CLAUDE.md
+.claude/
+
+# --- 依存関係 ---
+node_modules/
+
+# --- ビルド成果物 ---
+.next/
+out/
+dist/
+build/
+*.tsbuildinfo
+next-env.d.ts
+
+# --- Turborepo ---
+.turbo/
+
+# --- テスト ---
+coverage/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# --- 環境変数(サンプルのみコミットする) ---
+.env
+.env.*
+!.env.example
+
+# --- ログ ---
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# --- エディタ・OS ---
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
