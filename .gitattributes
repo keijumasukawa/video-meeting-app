@@ -1,0 +1,10 @@
+# テキストファイルの改行コードをLFに統一する
+* text=auto eol=lf
+
+# バイナリファイル
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
