@@ -21,13 +21,28 @@ A browser-based video meeting application. The goal is to let multiple people st
 | Language | TypeScript | 5.x |
 | Frontend | Next.js (App Router) | 16.x |
 | Backend | NestJS | 11.x |
-| Real-time | WebRTC / Socket.IO | TBD |
+| Real-time | WebRTC (P2P mesh) / Socket.IO (signaling) | - |
 | Database | TBD | - |
 | Package Manager | pnpm workspace | 11.x |
 | Task Runner | Turborepo | 2.x |
 | CI/CD | GitHub Actions | - |
 
 <!-- Sync versions with the actual values after scaffolding -->
+
+## Architecture (Video Calls)
+
+Video and audio are exchanged directly between browsers over WebRTC (P2P mesh). The backend only acts as a signaling server, relaying the information needed to establish connections (offer / answer / ICE candidates).
+
+```
+[Browser A] ←── video & audio (WebRTC P2P) ──→ [Browser B]
+     │                                             │
+     └──── signaling (Socket.IO) ────┐ ┌───────────┘
+                                     │ │
+                            [NestJS backend]
+```
+
+- Uses Google's public STUN server (`stun:stun.l.google.com:19302`). TURN will be considered when needed
+- A P2P mesh practically supports up to 4-6 participants; migration to an SFU will be considered if larger rooms are required
 
 ## Directory Structure
 
