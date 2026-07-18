@@ -21,13 +21,28 @@
 | 言語 | TypeScript | 5.x |
 | フロントエンド | Next.js(App Router) | 16.x |
 | バックエンド | NestJS | 11.x |
-| リアルタイム通信 | WebRTC / Socket.IO | 未定 |
+| リアルタイム通信 | WebRTC(P2Pメッシュ)/ Socket.IO(シグナリング) | - |
 | データベース | 未定 | - |
 | パッケージ管理 | pnpm workspace | 11.x |
 | タスクランナー | Turborepo | 2.x |
 | CI/CD | GitHub Actions | - |
 
 <!-- バージョンはスキャフォールド後に実際の値へ同期すること -->
+
+## アーキテクチャ(ビデオ通話)
+
+映像・音声はブラウザ同士が WebRTC で直接送受信する(P2Pメッシュ)。バックエンドは接続確立に必要な情報(offer / answer / ICE candidate)を中継するシグナリングサーバーの役割のみを担う。
+
+```
+[ブラウザA] ←──映像・音声 (WebRTC P2P)──→ [ブラウザB]
+     │                                        │
+     └── シグナリング (Socket.IO) ──┐ ┌───────┘
+                                    │ │
+                          [NestJS バックエンド]
+```
+
+- STUN サーバーは Google の公開 STUN(`stun:stun.l.google.com:19302`)を使用。TURN は将来必要になった時点で検討
+- P2P メッシュの実用上限は4〜6人程度。それを超える要件が出た場合は SFU への移行を検討
 
 ## ディレクトリ構成
 
