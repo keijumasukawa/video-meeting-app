@@ -1,90 +1,90 @@
 # video-meeting-app
 
-[English](./README.en.md) | 日本語
+English | [日本語](./README.ja.md)
 
-<!-- 内容を更新した際は README.en.md も忘れずに同期すること -->
+<!-- Keep this file in sync when README.ja.md is updated. -->
 
-## プロジェクト概要
+## Overview
 
-ブラウザで動作するビデオ会議アプリケーション。アプリのインストールなしに、URLの共有だけで複数人のビデオ通話を開始できることを目指す。
+A browser-based video meeting application. The goal is to let multiple people start a video call just by sharing a URL, with no app installation required.
 
-### 主要機能(予定)
+### Key Features (planned)
 
-- ルームベースのビデオ通話
-- 画面共有
-- テキストチャット
+- Room-based video calls
+- Screen sharing
+- Text chat
 
-## 技術スタック
+## Tech Stack
 
-| 分類 | 技術 | バージョン |
+| Category | Technology | Version |
 | --- | --- | --- |
-| 言語 | TypeScript | 5.x |
-| フロントエンド | Next.js(App Router) | 16.x |
-| バックエンド | NestJS | 11.x |
-| リアルタイム通信 | WebRTC(P2Pメッシュ)/ Socket.IO(シグナリング) | - |
-| データベース | 未定 | - |
-| パッケージ管理 | pnpm workspace | 11.x |
-| タスクランナー | Turborepo | 2.x |
+| Language | TypeScript | 5.x |
+| Frontend | Next.js (App Router) | 16.x |
+| Backend | NestJS | 11.x |
+| Real-time | WebRTC (P2P mesh) / Socket.IO (signaling) | - |
+| Database | TBD | - |
+| Package Manager | pnpm workspace | 11.x |
+| Task Runner | Turborepo | 2.x |
 | CI/CD | GitHub Actions | - |
 
-<!-- バージョンはスキャフォールド後に実際の値へ同期すること -->
+<!-- Sync versions with the actual values after scaffolding -->
 
-## アーキテクチャ(ビデオ通話)
+## Architecture (Video Calls)
 
-映像・音声はブラウザ同士が WebRTC で直接送受信する(P2Pメッシュ)。バックエンドは接続確立に必要な情報(offer / answer / ICE candidate)を中継するシグナリングサーバーの役割のみを担う。
+Video and audio are exchanged directly between browsers over WebRTC (P2P mesh). The backend only acts as a signaling server, relaying the information needed to establish connections (offer / answer / ICE candidates).
 
 ```
-[ブラウザA] ←──映像・音声 (WebRTC P2P)──→ [ブラウザB]
-     │                                        │
-     └── シグナリング (Socket.IO) ──┐ ┌───────┘
-                                    │ │
-                          [NestJS バックエンド]
+[Browser A] ←── video & audio (WebRTC P2P) ──→ [Browser B]
+     │                                             │
+     └──── signaling (Socket.IO) ────┐ ┌───────────┘
+                                     │ │
+                            [NestJS backend]
 ```
 
-- STUN サーバーは Google の公開 STUN(`stun:stun.l.google.com:19302`)を使用。TURN は将来必要になった時点で検討
-- P2P メッシュの実用上限は4〜6人程度。それを超える要件が出た場合は SFU への移行を検討
+- Uses Google's public STUN server (`stun:stun.l.google.com:19302`). TURN will be considered when needed
+- A P2P mesh practically supports up to 4-6 participants; migration to an SFU will be considered if larger rooms are required
 
-## ディレクトリ構成
+## Directory Structure
 
 ```
 .
-├── .github/             # PRテンプレート・CIワークフロー
+├── .github/             # PR template & CI workflows
 ├── apps/
-│   ├── frontend/        # Next.js アプリ(ポート3000)
+│   ├── frontend/        # Next.js app (port 3000)
 │   │   └── src/
-│   └── backend/         # NestJS APIサーバー(ポート3001)
+│   └── backend/         # NestJS API server (port 3001)
 │       └── src/
 ├── packages/
-│   └── shared/          # フロント・バック共有の型定義(API・WebSocketイベント)
-├── pnpm-workspace.yaml  # ワークスペース定義
-├── turbo.json           # Turborepoタスク定義
-└── tsconfig.base.json   # 共通TypeScript設定(各パッケージがextends)
+│   └── shared/          # Types shared between frontend and backend (API / WebSocket events)
+├── pnpm-workspace.yaml  # Workspace definition
+├── turbo.json           # Turborepo task definitions
+└── tsconfig.base.json   # Shared TypeScript config (extended by each package)
 ```
 
-## セットアップ
+## Setup
 
-必要環境: Node.js 24以上 / pnpm 11以上
+Requirements: Node.js 24+ / pnpm 11+
 
 ```bash
-pnpm install   # 依存関係のインストール
-pnpm dev       # フロントエンド・バックエンドを同時起動
+pnpm install   # Install dependencies
+pnpm dev       # Start frontend and backend together
 ```
 
-## 開発コマンド
+## Development Commands
 
-すべてリポジトリルートで実行する。
+Run everything from the repository root.
 
-| コマンド | 説明 |
+| Command | Description |
 | --- | --- |
-| `pnpm dev` | 開発サーバーの起動(全アプリ同時) |
-| `pnpm build` | 本番用ビルド(依存順はTurborepoが解決) |
-| `pnpm test` | テストの実行 |
-| `pnpm lint` | Lintの実行 |
-| `pnpm format` | コードフォーマット |
+| `pnpm dev` | Start dev servers (all apps) |
+| `pnpm build` | Production build (Turborepo resolves dependency order) |
+| `pnpm test` | Run tests |
+| `pnpm lint` | Run linter |
+| `pnpm format` | Format code |
 
-## 開発サーバーのURL
+## Dev Server URLs
 
-| アプリ | URL |
+| App | URL |
 | --- | --- |
 | frontend | http://localhost:3000 |
 | backend | http://localhost:3001 |
